@@ -1,0 +1,93 @@
+{% extends 'shared/base.html' %}
+{% load static %}
+
+{%  block head %}
+    <title>Lista projektów</title>
+
+    <script>
+
+         $(document).ready(function() {
+                 var configParamsObj = {
+                    allowClear: true, // Adds X image to clear select
+                    closeOnSelect: true,
+                    placeholder: 'Wybierz stan projektu', // Place holder text to place in the select
+                    minimumResultsForSearch: -1 // Overrides default of 15 set above
+                };
+                $('.js-state').select2(configParamsObj);
+        });
+    </script>
+
+    <style>
+
+        input::placeholder{
+            color: #999;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered{
+            text-align: left;
+        }
+    </style>
+
+{% endblock %}
+
+{% block content %}
+    <h1 style="text-align: center">Blockchain</h1>
+    <div style="display: flex; justify-content: center; margin-top: 30px">
+        <form action="/mine_block_manage" method="post" style="">
+            {% csrf_token %}
+            <button type="submit" class="generic-button button-in-line">Mine</button>
+        </form>
+    </div>
+    {% if not page_obj %}
+        <p class="empty-list-label" style="margin-top: 20px;">There are no transactions at the moment.</p>
+    {% else %}
+        <div class="generic-list-container">
+            <table class="tab-projects">
+                <tr class="row-projects generic-row">
+                    <th class="proj-list-table-content">Block number</th>
+                    <th class="proj-list-table-content">Created</th>
+                    <th class="proj-list-table-content">Block hash</th>
+                    <th class="proj-list-table-content">Last block hash</th>
+                    <th class="proj-list-table-content">Sender</th>
+                    <th class="proj-list-table-content">Recipent</th>
+                    <th class="proj-list-table-content">Sent</th>
+                    <th class="proj-list-table-content">Amount</th>
+                    <th class="proj-list-table-content">Transaction's hash</th>
+                </tr>
+                    {% for transaction in page_obj %}
+                        <tr class="row-projects generic-row">
+                            <td class="proj-list-table-content">{{ transaction.block_number }}</td>
+                            <td class="proj-list-table-content">{{ transaction.block_timestamp }}</td>
+                            <td class="proj-list-table-content">{{ transaction.block_hash }}</td>
+                            <td class="proj-list-table-content">{{ transaction.block_previous_hash }}</td>
+                            <td class="proj-list-table-content">{{ transaction.transaction_sender }}</td>
+                            <td class="proj-list-table-content">{{ transaction.transaction_recipent }}</td>
+                            <td class="proj-list-table-content">{{ transaction.transaction_timestamp }}</td>
+                            <td class="proj-list-table-content">{{ transaction.transaction_amount }}</td>
+                            <td class="proj-list-table-content">{{ transaction.transaction_hash }}</td>
+                        </tr>
+                    {% endfor %}
+            </table>
+    <div class="pagination">
+        {% if not page_obj.has_previous and not page_obj.has_next %}
+        {% else %}
+            {% if page_obj.has_previous %}
+                <div class="page-item"><a class="generic-button button-href nonactive" href="?page=1&proj_name={{ proj_name }}&proj_state={{ proj_state }}&your_projects={{your_projects}}">&laquo; First</a></div>
+            {% endif %}
+            {% for i in nums %}
+                {% if forloop.counter == page_obj.number %}
+                    <div class="page-item"><a class="generic-button button-href active" href="?page={{ forloop.counter }}&proj_name={{ proj_name }}&proj_state={{ proj_state }}&your_projects={{your_projects}}">{{ forloop.counter }}</a></div>
+                {% else %}
+                    <div class="page-item"><a class="generic-button button-href nonactive" href="?page={{ forloop.counter }}&proj_name={{ proj_name }}&proj_state={{ proj_state }}&your_projects={{your_projects}}">{{ forloop.counter }}</a></div>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <div class="page-item"><a class="generic-button button-href nonactive" href="?page={{ page_obj.paginator.num_pages }}&proj_name={{ proj_name }}&proj_state={{ proj_state }}&your_projects={{your_projects}}">Last &raquo;</a></div>
+            {% endif %}
+        {% endif %}
+    </div>
+    </div>
+    {% endif %}
+
+{% endblock %}

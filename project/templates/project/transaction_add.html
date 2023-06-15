@@ -1,0 +1,43 @@
+{% extends 'shared/base.html' %}
+{% load static %}
+
+{% block head %}
+    <title>Dodawanie projektu</title>
+    <script>
+             $(document).ready(function() {
+                 var configParamsObj = {
+                     allowClear: true, // Adds X image to clear select
+                     closeOnSelect: true,
+                    placeholder: 'Wybierz słowo kluczowe', // Place holder text to place in the select
+                    minimumResultsForSearch: 3 // Overrides default of 15 set above
+                };
+                $('.proj-add-js-tag').select2(configParamsObj);
+            });
+    </script>
+
+{% endblock %}
+{% block content %}
+
+    <div class="proj-add-content">
+        <div class="item-container">
+            <form action="/add_transaction_manage" method="post" style="">
+                {% csrf_token %}
+                <h1 class="page-title">Add transaction</h1>
+                <p class="proj-add-p">Recipent</p>
+                 <select class="modal-select js-example-basic-single" id="user_id" name="user_id">
+                    <option></option>
+                    {% for user in users %}
+                        <option value="{{ user.id }}">{{user.username}}</option>
+                    {% endfor %}
+                 </select>
+                <p class="proj-add-p">Amount</p>
+                <input type="number" class="number" min="0.00" max="10000.00" step="0.01" id="amount" name="amount"/>
+                <div class="proj-add-centered-div">
+                    <input class="generic-button form-add-button forms-button" type="submit" value="Dodaj transakcje">
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+{% endblock %}

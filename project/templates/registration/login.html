@@ -1,0 +1,23 @@
+{% extends 'shared/base_login.html' %}
+{% load static %}
+
+{%  block head %}
+    <title>Login page</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+{% endblock %}
+
+
+{% block content %}
+    <div class="login-form-container">
+        <br><br>
+        <h1> Blockchain </h1>
+        <form method="post" style="margin-top: 10%;">
+            {% csrf_token %}
+            <label for="idUsername">Username</label><br>
+            <input class="username-input" type="text" name="username" autofocus="" autocapitalize="none" autocomplete="username" maxlength="150" class="username-input" required="" id="idUsername"><br><br>
+            <label for="idPassword">Password</label><br>
+            <input class="password-input" type="password" name="password" autocomplete="current-password" class="password-input" required="" id="idPassword"><br><br>
+            <button type="submit" class="generic-button button-in-line">Login</button>
+        </form>
+    </div>
+{% endblock %}

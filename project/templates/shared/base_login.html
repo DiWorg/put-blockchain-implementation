@@ -1,0 +1,59 @@
+{% load static %}
+<html>
+    <head>
+        <script src="https://code.jquery.com/jquery-3.6.1.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.css" integrity="sha512-oe8OpYjBaDWPt2VmSFR+qYOdnTjeV9QPLJUeqZyprDEQvQLJ9C5PCFclxwNuvb/GQgQngdCXzKSFltuHD3eCxA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+        <link rel="icon" type="image/png" href="{% static 'images/favicon-32x32.png' %}">
+
+        <script>
+            function showToast(type, message){
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": true,
+                    "progressBar": false,
+                    "positionClass": "toast-bottom-center",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "10000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+                toastr[type](message);
+            }
+        </script>
+        {% block head %}
+        {% endblock %}
+    </head>
+    <body>
+
+    {% block content %}
+    {% endblock %}
+
+
+    <script>
+        $(function (){
+            let lastMessages = []
+
+            {% if messages %}
+                {% for message in messages %}
+                    lastMessages.push({"type": "{{message.level_tag}}", "message": "{{message}}"})
+                {% endfor %}
+            {% endif %}
+
+            for(let message in lastMessages){
+                showToast(lastMessages[message].type, lastMessages[message].message);
+            }
+        });
+    </script>
+    </body>
+</html>
